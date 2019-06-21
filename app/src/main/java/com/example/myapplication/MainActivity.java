@@ -10,9 +10,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +24,7 @@ import java.util.Set;
  * https://medium.com/@droidbyme/autocomplete-textview-in-android-a1bf5fc112f6
  * https://proxus.dk/Blog/Post/2014/12/19/android-autocomplete-edittext-with-history
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     public static final String PREFS_NAME = "PingBusPrefs";
     public static final String PREFS_SEARCH_HISTORY = "SearchHistory";
@@ -29,6 +33,16 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] fruits = {"Apple", "Appy", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
     private AutoCompleteTextView autoTextView;
+    private ArrayList<Fruit> fruitArrayList;
+    private FruitAdapter fruitAdapter;
+
+
+    private void init(){
+        fruitArrayList = new ArrayList<>();
+        fruitArrayList.add(new Fruit("apple", "3"));
+        fruitArrayList.add(new Fruit("apple2", "1"));
+        fruitArrayList.add(new Fruit("apple3", "1"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +59,17 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        init();
         autoTextView = findViewById(R.id.textInput);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, fruits);
+        fruitAdapter = new FruitAdapter(this, R.layout.recent_row, fruitArrayList);
+
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+//                (this, android.R.layout.select_dialog_item, fruits);
+
         autoTextView.setThreshold(1); //will start working from first character
-        autoTextView.setAdapter(adapter);
+        autoTextView.setAdapter(fruitAdapter);
+
+        autoTextView.setOnItemClickListener(this);
     }
 
     @Override
@@ -72,5 +92,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Toast.makeText(this, "" + i, Toast.LENGTH_SHORT);
+    }
+
+    public static class Fruit{
+        public int image;
+        public String name;
+        public String desc;
+
+        public Fruit(String name, String desc){
+            this.image = R.drawable.ic_launcher_background;
+            this.name = name;
+            this.desc = desc;
+        }
     }
 }
