@@ -51,14 +51,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         init();
         autoTextView = findViewById(R.id.textInput);
         fruitAdapter = new FruitAdapter(this, R.layout.recent_row, fruitArrayList);
@@ -70,6 +62,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         autoTextView.setAdapter(fruitAdapter);
 
         autoTextView.setOnItemClickListener(this);
+//        autoTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                return false;
+//            }
+//        });
+
+        autoTextView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i == KeyEvent.KEYCODE_ENTER){
+                    Toast.makeText(MainActivity.this, "" + i, Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -81,12 +90,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
